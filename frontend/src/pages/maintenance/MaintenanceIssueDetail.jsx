@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { issueAPI, maintenanceAPI } from '../../services/api';
+import { issueAPI, maintenanceAPI, getFullImageUrl } from '../../services/api';
 import StatusBadge from '../../components/StatusBadge';
 import PriorityBadge from '../../components/PriorityBadge';
 import TimelineView from '../../components/TimelineView';
@@ -276,7 +276,7 @@ export default function MaintenanceIssueDetail() {
                   {reportImages.map((img) => (
                     <div key={img.id} className="rounded-xl border border-zinc-800 overflow-hidden bg-black/40">
                       <img
-                        src={img.image_url.startsWith('http') ? img.image_url : `http://localhost:5000${img.image_url}`}
+                        src={getFullImageUrl(img.image_url)}
                         alt="Report defect"
                         className="w-full h-48 object-cover"
                       />
@@ -296,7 +296,7 @@ export default function MaintenanceIssueDetail() {
                   {completionImages.map((img) => (
                     <div key={img.id} className="rounded-xl border border-emerald-500/30 overflow-hidden bg-black/60">
                       <img
-                        src={img.image_url.startsWith('http') ? img.image_url : `http://localhost:5000${img.image_url}`}
+                        src={getFullImageUrl(img.image_url)}
                         alt="Completion proof"
                         className="w-full h-48 object-cover"
                       />

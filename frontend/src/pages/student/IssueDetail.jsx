@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { issueAPI } from '../../services/api';
+import { issueAPI, getFullImageUrl } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import StatusBadge from '../../components/StatusBadge';
 import PriorityBadge from '../../components/PriorityBadge';
@@ -221,7 +221,7 @@ export default function IssueDetail() {
                   {reportImages.map((img) => (
                     <div key={img.id} className="rounded-xl border border-zinc-800 overflow-hidden bg-black/40">
                       <img
-                        src={img.image_url.startsWith('http') ? img.image_url : `http://localhost:5000${img.image_url}`}
+                        src={getFullImageUrl(img.image_url)}
                         alt="Reported problem"
                         className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
                       />
@@ -247,7 +247,7 @@ export default function IssueDetail() {
                   {completionImages.map((img) => (
                     <div key={img.id} className="rounded-xl border border-emerald-500/30 overflow-hidden bg-black/60">
                       <img
-                        src={img.image_url.startsWith('http') ? img.image_url : `http://localhost:5000${img.image_url}`}
+                        src={getFullImageUrl(img.image_url)}
                         alt="Completion proof"
                         className="w-full h-48 object-cover"
                       />

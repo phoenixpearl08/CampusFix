@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://campusfix-vnhn.onrender.com/api';
+export const BACKEND_URL = API_BASE_URL.replace(/\/api\/?$/, '');
+
+export const getFullImageUrl = (path) => {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `${BACKEND_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+};
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -24,10 +31,13 @@ api.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       // Clear token if invalid session
-      if (window.location.pathname !== '/login' && window.location.pathname !== '/register' && window.location.pathname !== '/') {
+      const base = import.meta.env.BASE_URL || '/';
+      const cleanBase = base.endsWith('/') ? base : base + '/';
+      const currentPath = window.location.pathname;
+      if (!currentPath.includes('/login') && !currentPath.includes('/register') && currentPath !== cleanBase) {
         localStorage.removeItem('campusfix_token');
         localStorage.removeItem('campusfix_user');
-        window.location.href = '/login?expired=true';
+        window.location.href = `${cleanBase}login?expired=true`;
       }
     }
     return Promise.reject(error);

@@ -99,7 +99,7 @@ export default function App() {
   return (
     <AuthProvider>
       <NotificationProvider>
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
           <AppLayout>
             <Routes>
               {/* Public Routes */}
