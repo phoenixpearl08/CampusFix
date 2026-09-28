@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -16,9 +16,6 @@ concurrency:
 
 jobs:
   build-and-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -41,14 +38,27 @@ jobs:
           VITE_API_URL: https://campusfix-vnhn.onrender.com/api
         run: npm run build
 
-      - name: Setup Pages
+      - name: Ensure .nojekyll in dist
+        run: touch frontend/dist/.nojekyll
+
+      - name: Deploy to GitHub Pages (gh-pages branch)
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: frontend/dist
+          branch: gh-pages
+          commit-message: 'Deploy CampusFix production build to GitHub Pages'
+
+      - name: Setup Pages (for Actions-based Pages deployment)
         uses: actions/configure-pages@v5
+        continue-on-error: true
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
+        continue-on-error: true
         with:
           path: 'frontend/dist'
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages Artifact
         id: deployment
         uses: actions/deploy-pages@v4
+        continue-on-error: true
